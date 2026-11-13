@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>DON UBALDO – Caja y Stock</title>
+<style>
+:root{--bg:#f7f3ff;--card:#fff;--tx:#1d1433;--mut:#6b6285;--bd:#e3dbf5;--pri:#6200ea;--tip:#fff3b0;--pri-tx:#fff;--warn:#c0392b;--des:#ff6f00;--ver:#00c853;--fia:#ff4081;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#140d26;--card:#1f1538;--tx:#f1ebff;--mut:#b3a6d6;--bd:#35285c;--pri:#b388ff;--pri-tx:#1a0838;--tip:#4a3f10;--warn:#ff7b6b;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#140d26;--card:#1f1538;--tx:#f1ebff;--mut:#b3a6d6;--bd:#35285c;--pri:#b388ff;--pri-tx:#1a0838;--tip:#4a3f10;--warn:#ff7b6b;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header{padding:14px 16px 0;background:var(--pri);color:var(--pri-tx)}header>*{max-width:1100px;margin-left:auto;margin-right:auto}
+h1{font-size:20px;margin:0 0 10px}
+nav{display:flex;gap:6px}
+nav button{flex:1;background:none;border:0;color:inherit;opacity:.72;padding:10px 4px;font-size:15px;border-bottom:3px solid transparent;cursor:pointer}
+nav button.on{opacity:1;border-color:#ffd500;font-weight:600}
+main{max-width:1100px;margin:0 auto;padding:14px 16px 40px}
+.view{display:none}.view.on{display:block}
+.sale{display:grid;grid-template-columns:1fr 340px;gap:16px}
+@media(max-width:800px){.sale{grid-template-columns:1fr}}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.chip{border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:999px;padding:6px 14px;cursor:pointer;font-size:14px}
+.chip.on{background:var(--pri);color:var(--pri-tx);border-color:var(--pri)}
+input,select{background:var(--card);color:var(--tx);border:1px solid var(--bd);border-radius:8px;padding:9px;font-size:15px;width:100%}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-top:10px}
+.prod{background:var(--card);border:1px solid var(--bd);border-left-width:5px;border-radius:10px;padding:10px;text-align:left;cursor:pointer;color:var(--tx);font-size:15px}
+.prod:disabled{opacity:.45;cursor:not-allowed}
+.prod b{display:block}.prod small{color:var(--mut)}
+.c-Despensa{border-left-color:var(--des)}.c-Verdulería{border-left-color:var(--ver)}.c-Fiambrería{border-left-color:var(--fia)}
+.panel{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px}
+.line{display:grid;grid-template-columns:1fr 84px 70px 24px;gap:6px;align-items:center;padding:6px 0;border-bottom:1px solid var(--bd);font-size:14px}
+.line input{padding:5px;font-size:14px}
+.line .x{background:none;border:0;color:var(--warn);font-size:18px;cursor:pointer}
+.total{display:flex;justify-content:space-between;font-size:22px;font-weight:700;margin:12px 0}
+.btn{background:var(--pri);color:var(--pri-tx);border:0;border-radius:10px;padding:12px;font-size:16px;font-weight:600;width:100%;cursor:pointer}
+.btn.sec{background:none;color:var(--tx);border:1px solid var(--bd);width:auto;padding:8px 12px;font-size:14px}
+.btn:disabled{opacity:.5}
+.form{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-bottom:14px}
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px;min-width:560px}
+th,td{padding:7px 6px;border-bottom:1px solid var(--bd);text-align:left}
+td input{padding:5px;width:90px}
+.low{color:var(--warn);font-weight:600}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:14px}
+.stat{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px}
+.stat span{color:var(--mut);font-size:13px}.stat b{display:block;font-size:22px}
+.msg{color:var(--mut);padding:8px 0}
+.chip small,nav small{opacity:.65;margin-left:4px;font-size:11px}
+td input.wide{width:100%;min-width:150px}
+td select{padding:5px;width:auto}
+header::after{content:"";display:block;height:6px;margin:0 -16px;background:linear-gradient(90deg,#ff6f00 20%,#ff4081 20% 40%,#ffd500 40% 60%,#00e676 60% 80%,#6200ea 80%)}
+.tipbox{background:var(--tip);border-radius:10px;padding:12px;margin-bottom:14px;font-size:14px}
+body[data-s="venta"]{--pri:#ff6f00;--pri-tx:#2a1500}
+body[data-s="stock"]{--pri:#ff4081;--pri-tx:#fff}
+body[data-s="rep"]{--pri:#6200ea;--pri-tx:#fff}
+body[data-s="precios"]{--pri:#00e676;--pri-tx:#04281a}
+.scanbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:50;align-items:center;justify-content:center;padding:16px}
+.scanin{background:var(--card);border-radius:14px;padding:14px;width:min(520px,100%)}
+.scanin video{width:100%;border-radius:10px;background:#000;max-height:50vh}
+.pgrid{display:grid;grid-template-columns:380px 1fr;gap:16px}@media(max-width:800px){.pgrid{grid-template-columns:1fr}}
+.scan{display:flex;flex-direction:column;align-items:center;justify-content:center;width:170px;height:170px;border-radius:50%;background:var(--pri);color:var(--pri-tx);border:0;margin:6px auto 14px;cursor:pointer;gap:2px;font-size:15px}
+.plist{margin-top:8px;max-height:55vh;overflow:auto}
+.plist button{display:flex;justify-content:space-between;width:100%;text-align:left;background:var(--card);border:0;border-bottom:1px solid var(--bd);padding:10px 8px;color:var(--tx);cursor:pointer;font-size:15px}
+.cmp{display:grid;grid-template-columns:1fr 110px 90px;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--bd)}
+.cmp.mine{background:var(--tip);padding:10px 8px;border-radius:8px;margin:10px 0 6px}
+.keys{display:flex;flex-wrap:wrap;gap:6px 14px;color:var(--mut);font-size:13px;margin-top:22px}
+.keys b{background:var(--card);border:1px solid var(--bd);border-radius:5px;padding:1px 6px;color:var(--tx);font-weight:600}
+</style>
+</head>
+<body data-s="venta">
+<header>
+<h1>🛒 DON UBALDO <small style="font-weight:400;opacity:.8;font-size:13px">Despensa · Verdulería · Fiambrería</small></h1>
+<nav id="nav">
+<button data-v="venta" class="on">Venta <small>F1</small></button>
+<button data-v="stock">Stock <small>F2</small></button>
+<button data-v="rep">Ventas <small>F3</small></button>
+<button data-v="precios">Precios <small>F4</small></button>
+</nav>
+</header>
+<main>
+
+<section id="venta" class="view on">
+<div class="sale">
+<div>
+<div class="chips" id="cats"></div>
+<button class="btn" id="camscan" style="margin-bottom:8px">📷 Escanear productos (Alt+E)</button>
+<input id="q" placeholder="Buscar o escanear código… (F1) · Enter agrega" aria-label="Buscar">
+<div class="grid" id="grid"></div>
+</div>
+<div class="panel">
+<strong>Ticket</strong>
+<div id="cart"><p class="msg">Tocá un producto para agregarlo.</p></div>
+<div class="total"><span>Total</span><span id="tot">$0</span></div>
+<select id="pay" aria-label="Medio de pago">
+<option>Efectivo</option><option>Transferencia</option><option>Débito</option><option>Crédito</option><option>QR / Mercado Pago</option>
+</select>
+<div style="height:10px"></div>
+<button class="btn" id="cobrar" disabled>Cobrar (F10)</button>
+<div style="height:8px"></div>
+<button class="btn sec" id="vaciar">Vaciar ticket (Shift+F9)</button>
+</div>
+</div>
+</section>
+
+<section id="stock" class="view">
+<div id="lock" class="panel" style="max-width:360px"><strong>🔒 Solo el dueño</strong><p class="msg">Ingresá tu PIN para editar productos y precios.</p><input id="pin" type="password" inputmode="numeric" placeholder="PIN" autocomplete="off"><div style="height:8px"></div><button class="btn" id="unlock">Entrar</button><p class="msg" id="pinmsg" style="color:var(--warn)"></p></div>
+<div id="owner" style="display:none">
+<p><button class="btn sec" id="logout">🔓 Cerrar sesión de dueño</button></p>
+<div class="panel" style="margin-bottom:14px">
+<strong>Agregar producto</strong>
+<div class="form" style="margin-top:8px">
+<div style="display:flex;gap:4px"><input id="nb" placeholder="Código de barras" inputmode="numeric" autocomplete="off"><button class="btn sec" id="nbscan" title="Escanear con cámara" aria-label="Escanear código">📷</button></div>
+<input id="nn" placeholder="Nombre">
+<select id="nc"><option>Despensa</option><option>Verdulería</option><option>Fiambrería</option></select>
+<select id="nu"><option value="u">Por unidad</option><option value="kg">Por kilo</option></select>
+<input id="np" type="number" min="0" step="0.01" placeholder="Precio">
+<input id="ns" type="number" min="0" step="0.01" placeholder="Stock">
+<button class="btn" id="add" style="padding:9px">Agregar</button>
+</div>
+</div>
+<div class="tw"><table><thead><tr><th>Producto</th><th>Código de barras</th><th>Rubro</th><th>Se vende</th><th>Precio $</th><th>Stock</th><th></th></tr></thead><tbody id="tb"></tbody></table></div>
+<div class="panel" style="margin-top:14px;max-width:360px"><strong>Cambiar PIN</strong><div style="height:8px"></div><input id="newpin" type="password" inputmode="numeric" placeholder="Nuevo PIN (mínimo 4 números)" autocomplete="off"><div style="height:8px"></div><button class="btn sec" id="setpin">Guardar PIN</button></div>
+</div>
+</section>
+
+<section id="precios" class="view">
+<div class="tipbox">Compará tus precios con los de los supermercados. Escribí el precio que ves en Coto, Jumbo, Carrefour y Mas Online, y mirá la diferencia con el tuyo.</div>
+<div class="pgrid">
+<div>
+<button class="scan" id="scan"><span style="font-size:34px">▥</span><b>Escanear producto</b><small>Cámara o lector USB</small></button>
+<input id="pq" placeholder="Buscar por nombre o código…" aria-label="Buscar precio">
+<div id="plist" class="plist"></div>
+</div>
+<div class="panel" id="pdet"></div>
+</div>
+</section>
+
+<section id="rep" class="view">
+<div class="stats" id="stats"></div>
+<div class="tw"><table><thead><tr><th>Hora</th><th>Detalle</th><th>Pago</th><th>Total</th></tr></thead><tbody id="sales"></tbody></table></div>
+<p><button class="btn sec" id="csv">Descargar CSV</button> <button class="btn sec" id="reset">Borrar todo</button></p>
+</section>
+
+<div class="keys"><span><b>F1</b> Venta y buscar</span><span><b>F2</b> Stock (dueño)</span><span><b>F3</b> Ventas</span><span><b>F4</b> Precios</span><span><b>F5</b> Todos</span><span><b>F6</b> Despensa</span><span><b>F7</b> Verdulería</span><span><b>F8</b> Fiambrería</span><span><b>F9</b> Medio de pago</span><span><b>Shift+F9</b> Vaciar ticket</span><span><b>F10</b> Cobrar</span><span><b>Alt+E</b> Escanear con cámara</span><span><b>Enter</b> Agregar primer resultado</span><span><b>Esc</b> Limpiar búsqueda</span></div>
+</main>
+<div id="scanbox" class="scanbox"><div class="scanin"><video id="vid" playsinline muted></video><p id="smsg" class="msg"></p><button class="btn" id="sclose">Cerrar (Esc)</button></div></div>
+<script>
+const CATS=['Despensa','Verdulería','Fiambrería'];
+const $=s=>document.querySelector(s);
+const money=n=>'$'+Math.round(n).toLocaleString('es-AR');
+const qtyTxt=(q,u)=>u==='kg'?(q.toLocaleString('es-AR',{maximumFractionDigits:3})+' kg'):q+' u';
+const seed=[
+['Arroz 1 kg','Despensa','u',1800,40],['Fideos 500 g','Despensa','u',1200,60],['Aceite 900 ml','Despensa','u',3200,30],['Azúcar 1 kg','Despensa','u',1500,35],['Yerba 1 kg','Despensa','u',4200,25],['Harina 1 kg','Despensa','u',1000,30],['Gaseosa 2,25 L','Despensa','u',3000,24],
+['Tomate','Verdulería','kg',2500,20],['Papa','Verdulería','kg',1200,50],['Cebolla','Verdulería','kg',1100,40],['Zanahoria','Verdulería','kg',1000,25],['Banana','Verdulería','kg',2200,20],['Manzana','Verdulería','kg',2400,20],['Lechuga','Verdulería','u',1500,15],
+['Jamón cocido','Fiambrería','kg',14000,6],['Queso cremoso','Fiambrería','kg',9500,8],['Salame','Fiambrería','kg',16000,4],['Mortadela','Fiambrería','kg',7000,5],['Queso de máquina','Fiambrería','kg',10500,7]
+].map((p,i)=>({id:'p'+i,name:p[0],cat:p[1],unit:p[2],price:p[3],stock:p[4]}));
+let S={products:seed,sales:[]},cart=[],cat='Todos';
+function load(){try{const r=localStorage.getItem('almacen_v1');if(r){const d=JSON.parse(r);if(d&&d.products)S=d}}catch(e){}}
+function save(){try{localStorage.setItem('almacen_v1',JSON.stringify(S))}catch(e){}}
+load();
+
+document.querySelectorAll('#nav button').forEach(b=>b.onclick=()=>{
+ document.querySelectorAll('#nav button').forEach(x=>x.classList.toggle('on',x===b));
+ document.querySelectorAll('.view').forEach(v=>v.classList.toggle('on',v.id===b.dataset.v));document.body.dataset.s=b.dataset.v;
+ render();
+});
+
+function renderCats(){
+ $('#cats').innerHTML=['Todos',...CATS].map(c=>`<button class="chip ${c===cat?'on':''}" data-c="${c}">${c} <small>F${5+['Todos',...CATS].indexOf(c)}</small></button>`).join('');
+ $('#cats').querySelectorAll('.chip').forEach(b=>b.onclick=()=>{cat=b.dataset.c;renderGrid();renderCats()});
+}
+function renderGrid(){
+ const t=$('#q').value.toLowerCase();
+ const L=S.products.filter(p=>(cat==='Todos'||p.cat===cat)&&(p.name.toLowerCase().includes(t)||(p.code||'').includes(t)));
+ $('#grid').innerHTML=L.length?L.map(p=>`<button class="prod c-${p.cat}" data-id="${p.id}" ${p.stock<=0?'disabled':''}><b>${p.name}</b>${money(p.price)}${p.unit==='kg'?' /kg':''}<br><small>Stock: ${qtyTxt(p.stock,p.unit)}</small></button>`).join(''):'<p class="msg">Sin resultados.</p>';
+ $('#grid').querySelectorAll('.prod').forEach(b=>b.onclick=()=>addCart(b.dataset.id));
+}
+$('#q').oninput=renderGrid;
+
+function addCart(id){
+ const p=S.products.find(x=>x.id===id);if(!p)return;
+ const l=cart.find(x=>x.id===id);
+ const step=p.unit==='kg'?0.25:1;
+ if(l)l.qty=Math.min(p.stock,+(l.qty+step).toFixed(3));else cart.push({id,qty:Math.min(p.stock,step)});
+ renderCart();
+}
+function renderCart(){
+ if(!cart.length){$('#cart').innerHTML='<p class="msg">Tocá un producto para agregarlo.</p>'}
+ else $('#cart').innerHTML=cart.map((l,i)=>{const p=S.products.find(x=>x.id===l.id);return `<div class="line"><span>${p.name}</span><input type="number" min="0" step="${p.unit==='kg'?0.05:1}" max="${p.stock}" value="${l.qty}" data-i="${i}" aria-label="Cantidad ${p.name}"><span>${money(l.qty*p.price)}</span><button class="x" data-x="${i}" aria-label="Quitar">×</button></div>`}).join('');
+ $('#cart').querySelectorAll('input').forEach(inp=>inp.onchange=()=>{
+  const l=cart[+inp.dataset.i],p=S.products.find(x=>x.id===l.id);
+  let v=parseFloat(inp.value);if(!(v>0))v=0;l.qty=Math.min(v,p.stock);
+  if(l.qty===0)cart.splice(+inp.dataset.i,1);renderCart();
+ });
+ $('#cart').querySelectorAll('.x').forEach(b=>b.onclick=()=>{cart.splice(+b.dataset.x,1);renderCart()});
+ const total=cart.reduce((s,l)=>s+l.qty*S.products.find(x=>x.id===l.id).price,0);
+ $('#tot').textContent=money(total);$('#cobrar').disabled=!cart.length;
+}
+$('#vaciar').onclick=()=>{cart=[];renderCart()};
+$('#cobrar').onclick=()=>{
+ const items=cart.map(l=>{const p=S.products.find(x=>x.id===l.id);p.stock=+(p.stock-l.qty).toFixed(3);return{name:p.name,cat:p.cat,unit:p.unit,qty:l.qty,sub:l.qty*p.price}});
+ S.sales.push({t:Date.now(),items,pay:$('#pay').value,total:items.reduce((s,i)=>s+i.sub,0)});
+ save();cart=[];renderCart();renderGrid();
+};
+
+function renderStock(){
+ $('#tb').innerHTML=S.products.map(p=>`<tr><td><input class="wide" value="${p.name.replace(/"/g,'&quot;')}" data-id="${p.id}" data-f="name"></td><td><input value="${p.code||''}" placeholder="Código" data-id="${p.id}" data-f="code"></td><td><select data-id="${p.id}" data-f="cat">${CATS.map(c=>`<option ${c===p.cat?'selected':''}>${c}</option>`).join('')}</select></td><td><select data-id="${p.id}" data-f="unit"><option value="u" ${p.unit==='u'?'selected':''}>Unidad</option><option value="kg" ${p.unit==='kg'?'selected':''}>Kilo</option></select></td><td><input type="number" min="0" step="0.01" value="${p.price}" data-id="${p.id}" data-f="price"></td><td><input type="number" min="0" step="0.01" value="${p.stock}" data-id="${p.id}" data-f="stock" class="${p.stock<=5?'low':''}"></td><td><button class="btn sec" data-d="${p.id}">Borrar</button></td></tr>`).join('');
+ $('#tb').querySelectorAll('input,select').forEach(i=>i.onchange=()=>{const p=S.products.find(x=>x.id===i.dataset.id);const f=i.dataset.f;if(f==='name'){p.name=i.value.trim()||p.name}else if(f==='cat'||f==='unit'||f==='code'){p[f]=i.value.trim()}else{const nv=Math.max(0,parseFloat(i.value)||0);if(f==='price'&&nv!==p.price){S.hist=S.hist||{};(S.hist[p.id]=S.hist[p.id]||[]).push({t:Date.now(),price:nv})}p[f]=nv}save();renderStock();renderGrid();renderCart()});
+ $('#tb').querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>{S.products=S.products.filter(x=>x.id!==b.dataset.d);cart=cart.filter(l=>l.id!==b.dataset.d);save();renderStock()});
+}
+$('#add').onclick=()=>{
+ const name=$('#nn').value.trim(),price=parseFloat($('#np').value);
+ if(!name||!(price>=0))return;
+ const code=$('#nb').value.trim();
+ if(code&&S.products.some(x=>x.code===code)){alert('Ese código ya está cargado en otro producto.');return}
+ S.products.push({id:'p'+Date.now(),name,code,cat:$('#nc').value,unit:$('#nu').value,price,stock:parseFloat($('#ns').value)||0});
+ save();['#nb','#nn','#np','#ns'].forEach(s=>$(s).value='');renderStock();
+};
+
+const isToday=t=>new Date(t).toDateString()===new Date().toDateString();
+function renderRep(){
+ const td=S.sales.filter(s=>isToday(s.t));
+ const tot=td.reduce((s,x)=>s+x.total,0);
+ const byCat={};CATS.forEach(c=>byCat[c]=0);
+ td.forEach(s=>s.items.forEach(i=>byCat[i.cat]=(byCat[i.cat]||0)+i.sub));
+ const byPay={};td.forEach(s=>byPay[s.pay]=(byPay[s.pay]||0)+s.total);
+ $('#stats').innerHTML=`<div class="stat"><span>Total de hoy</span><b>${money(tot)}</b></div><div class="stat"><span>Ventas hoy</span><b>${td.length}</b></div>`+
+  CATS.map(c=>`<div class="stat"><span>${c}</span><b>${money(byCat[c])}</b></div>`).join('')+
+  Object.keys(byPay).map(k=>`<div class="stat"><span>${k}</span><b>${money(byPay[k])}</b></div>`).join('');
+ $('#sales').innerHTML=td.length?td.slice().reverse().map(s=>`<tr><td>${new Date(s.t).toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'})}</td><td>${s.items.map(i=>i.name+' ('+qtyTxt(i.qty,i.unit)+')').join(', ')}</td><td>${s.pay}</td><td>${money(s.total)}</td></tr>`).join(''):'<tr><td colspan="4" class="msg">Todavía no hay ventas hoy.</td></tr>';
+}
+$('#csv').onclick=()=>{
+ const rows=[['Fecha','Producto','Rubro','Cantidad','Unidad','Subtotal','Pago']];
+ S.sales.forEach(s=>s.items.forEach(i=>rows.push([new Date(s.t).toLocaleString('es-AR'),i.name,i.cat,i.qty,i.unit,Math.round(i.sub),s.pay])));
+ const csv=rows.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\n');
+ const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);a.download='ventas.csv';a.click();
+};
+$('#reset').onclick=()=>{
+ if(!owner){alert('Solo el dueño puede borrar todo. Ingresá con tu PIN en Stock (F2).');return}
+ if(!confirm('¿Borrar productos y ventas guardados?'))return;
+ try{localStorage.removeItem('almacen_v1')}catch(e){}
+ S={products:JSON.parse(JSON.stringify(seed)),sales:[],pin:S.pin};cart=[];render();
+};
+
+let owner=false;
+function applyLock(){$('#lock').style.display=owner?'none':'block';$('#owner').style.display=owner?'block':'none'}
+$('#unlock').onclick=()=>{if($('#pin').value===(S.pin||'1234')){owner=true;$('#pin').value='';$('#pinmsg').textContent='';applyLock()}else{$('#pinmsg').textContent='PIN incorrecto'}};
+$('#pin').onkeydown=e=>{if(e.key==='Enter')$('#unlock').click()};
+$('#logout').onclick=()=>{owner=false;applyLock()};
+$('#setpin').onclick=()=>{const v=$('#newpin').value.trim();if(v.length<4){alert('El PIN debe tener al menos 4 números');return}S.pin=v;save();$('#newpin').value='';alert('PIN cambiado')};
+const SUPERS=['Coto','Jumbo','Carrefour','Mas Online'];let sel=null;
+function renderPrecios(){
+ const t=$('#pq').value.toLowerCase();
+ const L=S.products.filter(p=>p.name.toLowerCase().includes(t)||(p.code||'').includes(t));
+ $('#plist').innerHTML=L.length?L.map(p=>`<button data-id="${p.id}"><span>${p.name}</span><b>${money(p.price)}${p.unit==='kg'?' /kg':''}</b></button>`).join(''):'<p class="msg">Sin resultados.</p>';
+ $('#plist').querySelectorAll('button').forEach(b=>b.onclick=()=>{sel=b.dataset.id;renderDet()});
+ renderDet();
+}
+function renderDet(){
+ const p=S.products.find(x=>x.id===sel),box=$('#pdet');
+ if(!p){box.innerHTML='<p class="msg">Elegí un producto para ver y comparar precios.</p>';return}
+ p.comp=p.comp||{};
+ const all=[p.price,...SUPERS.map(s=>p.comp[s]).filter(v=>v>0)],min=Math.min(...all),kg=p.unit==='kg'?' /kg':'';
+ const rows=SUPERS.map(s=>{const v=p.comp[s]||0,d=p.price-v;return `<div class="cmp"><span>${s}${v>0&&v===min?' <b style="color:#008f4c">· más barato</b>':''}</span><input type="number" min="0" step="0.01" value="${v||''}" placeholder="$" data-s="${s}" aria-label="Precio en ${s}"><small class="${v>0&&d>0?'low':''}">${v>0?(d===0?'igual':(d>0?'+':'−')+money(Math.abs(d))):''}</small></div>`}).join('');
+ const h=((S.hist||{})[p.id]||[]).slice(-8).reverse();
+ box.innerHTML=`<strong style="font-size:18px">${p.name}</strong><small class="msg" style="display:block">${p.cat}${p.code?' · Código '+p.code:''}</small><div class="cmp mine"><b>DON UBALDO · tu precio</b><b>${money(p.price)}${kg}</b><small>${p.price===min?'más barato':''}</small></div><div class="msg" style="font-size:13px">Precio en supermercados (escribilo vos) y diferencia con tu precio</div>${rows}<div style="height:12px"></div><strong>Historial de tu precio</strong>${h.length?h.map(x=>`<div class="cmp"><span>${new Date(x.t).toLocaleDateString('es-AR')}</span><b>${money(x.price)}</b><span></span></div>`).join(''):'<p class="msg">Todavía no cambiaste este precio.</p>'}`;
+ box.querySelectorAll('input').forEach(i=>i.onchange=()=>{p.comp[i.dataset.s]=Math.max(0,parseFloat(i.value)||0);save();renderDet()});
+}
+$('#pq').oninput=renderPrecios;
+$('#pq').onkeydown=e=>{if(e.key==='Enter'){const b=$('#plist button');if(b)b.click()}};
+$('#scan').onclick=openScan;
+let stream=null,scanning=false,detector=null,zx=null,lastCode='',lastT=0;
+function beep(){try{const a=new (window.AudioContext||window.webkitAudioContext)(),o=a.createOscillator();o.frequency.value=880;o.connect(a.destination);o.start();setTimeout(()=>{o.stop();a.close()},120)}catch(e){}}
+function found(code){
+ const now=Date.now();if(code===lastCode&&now-lastT<2500)return;lastCode=code;lastT=now;
+ const p=S.products.find(x=>x.code&&x.code===code);
+ if(document.body.dataset.s==='stock'){
+  if(!owner){$('#smsg').textContent='Ingresá con tu PIN de dueño para usar el escáner en Stock.';return}
+  beep();closeScan();
+  if(p){const r=$('#tb input[data-id="'+p.id+'"][data-f="stock"]');if(r){r.scrollIntoView({block:'center'});r.focus();r.select()}}
+  else{$('#nb').value=code;$('#nn').focus()}
+  return
+ }
+ if(!p){$('#smsg').textContent='Código '+code+' no cargado. El dueño puede agregarlo en Stock.';return}
+ beep();
+ if(document.body.dataset.s==='precios'){sel=p.id;$('#pq').value='';renderPrecios();closeScan()}
+ else if(p.stock<=0){$('#smsg').textContent=p.name+': sin stock'}
+ else{addCart(p.id);$('#smsg').textContent='Agregado: '+p.name}
+}
+async function openScan(){
+ if(!['venta','precios','stock'].includes(document.body.dataset.s))goView('venta');
+ $('#scanbox').style.display='flex';$('#smsg').textContent='Apuntá la cámara al código de barras.';
+ try{
+  if('BarcodeDetector' in window){
+   stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});
+   const v=$('#vid');v.srcObject=stream;await v.play();scanning=true;
+   detector=new BarcodeDetector({formats:['ean_13','ean_8','upc_a','upc_e','code_128']});loopBD();
+  }else{
+   scanning=true;
+   const go=()=>{zx=new ZXing.BrowserMultiFormatReader();zx.decodeFromVideoDevice(undefined,'vid',(r)=>{if(r)found(r.getText())}).catch(()=>{$('#smsg').textContent='No se pudo abrir la cámara. Revisá el permiso o usá un lector USB.'})};
+   if(window.ZXing)go();else{const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/@zxing/library@0.21.3/umd/index.min.js';s.onload=go;s.onerror=()=>{$('#smsg').textContent='No se pudo cargar el lector. Revisá tu conexión o usá un lector USB.'};document.head.appendChild(s)}
+  }
+ }catch(e){$('#smsg').textContent='No se pudo abrir la cámara. Revisá el permiso del navegador o usá un lector USB.'}
+}
+async function loopBD(){if(!scanning)return;try{const r=await detector.detect($('#vid'));if(r.length)found(r[0].rawValue)}catch(e){}setTimeout(loopBD,250)}
+function closeScan(){scanning=false;if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}if(zx){try{zx.reset()}catch(e){}zx=null}$('#scanbox').style.display='none'}
+$('#nb').onkeydown=e=>{if(e.key!=='Enter')return;const c=$('#nb').value.trim(),p=S.products.find(x=>x.code&&x.code===c);if(p){const r=$('#tb input[data-id="'+p.id+'"][data-f="stock"]');if(r){r.scrollIntoView({block:'center'});r.focus();r.select()}$('#nb').value=''}else $('#nn').focus()};
+$('#nbscan').onclick=openScan;
+['#nn','#np','#ns'].forEach(s=>$(s).onkeydown=e=>{if(e.key==='Enter')$('#add').click()});
+$('#camscan').onclick=openScan;$('#sclose').onclick=closeScan;
+function render(){renderCats();renderGrid();renderCart();renderStock();renderRep();renderPrecios();applyLock()}
+render();
+
+const goView=v=>document.querySelector('#nav [data-v="'+v+'"]').click();
+function setCat(c){cat=c;goView('venta');$('#q').focus()}
+const KEYS={
+ F1:()=>{goView('venta');$('#q').focus();$('#q').select()},
+ F2:()=>{goView('stock');if(!owner)$('#pin').focus()},
+ F3:()=>goView('rep'),
+ F4:()=>{goView('precios');$('#pq').focus()},
+ F5:()=>setCat('Todos'),
+ F6:()=>setCat('Despensa'),
+ F7:()=>setCat('Verdulería'),
+ F8:()=>setCat('Fiambrería'),
+ F9:()=>{const s=$('#pay');s.selectedIndex=(s.selectedIndex+1)%s.options.length},
+ 'S-F9':()=>{cart=[];renderCart()},
+ F10:()=>{if(!$('#cobrar').disabled)$('#cobrar').click()}
+};
+document.addEventListener('keydown',e=>{
+ if(e.key==='Escape'&&$('#scanbox').style.display==='flex'){closeScan();return}
+ if(e.altKey&&e.key.toLowerCase()==='e'){e.preventDefault();openScan();return}
+ const kk=(e.shiftKey?'S-':'')+e.key;if(KEYS[kk]){e.preventDefault();KEYS[kk]();return}
+ if(e.target.id==='q'){
+  if(e.key==='Enter'){const b=$('#grid .prod:not(:disabled)');if(b){addCart(b.dataset.id);e.target.select()}}
+  if(e.key==='Escape'){e.target.value='';renderGrid()}
+ }
+});
+</script>
+</body>
+</html>
